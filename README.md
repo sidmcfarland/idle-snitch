@@ -101,6 +101,33 @@ Clicking any of these buttons will manually set the tray icon to the correspondi
 
 The application uses the Windows system tray (via `NotifyIcon`) to display status and provide quick access to controls. Icons are loaded at startup and the tray icon is always visible while the app is running.
 
+## Business Hours Configuration
+
+IDLE Snitch supports configurable business hours. To set business hours:
+
+1. Edit `config/appsettings.json`:
+   ```json
+   {
+     "BusinessHours": {
+       "Enabled": true,
+       "DaysOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+       "StartTime": "09:00",
+       "EndTime": "17:00"
+     }
+   }
+   ```
+2. The app will automatically copy this file to the output directory if needed, so you only need to edit the source file in `config/`.
+3. The tray icon and the main form icon will reflect whether you are inside or outside business hours at startup.
+
+- The icon updates automatically at startup and whenever the state changes.
+- If an icon asset is missing, an error message will be shown.
+- If the config file is missing or invalid, a message box will appear with details.
+
+## Troubleshooting
+- If the tray icon disappears or the app crashes, ensure all icon files exist in the `assets/` folder and the config file is valid.
+- The form's icon now always matches the tray icon state.
+- The app copies `config/appsettings.json` to the output directory if not present, so runtime config issues are minimized.
+
 ## Planned Features
 See `development-tasks.md` for the full list of planned features and development progress.
 

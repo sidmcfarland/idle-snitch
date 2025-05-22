@@ -23,7 +23,11 @@ This document tracks all development tasks required to deliver the MVP as descri
     - [x] Add NotifyIcon to the main form and load icons
     - [x] Implement logic to switch tray icon based on state
     - [x] Add temporary UI or debug code to manually trigger each state for testing
-- [ ] Detect and respect configurable business hours
+- [x] Detect and respect configurable business hours
+    - [x] Add a configuration option (e.g., in a JSON or user.config file) for business hours (start/end time, days of week)
+    - [x] Load business hours from configuration at app startup
+    - [x] Implement a method to determine if the current time is within business hours
+    - [x] Integrate this check into the main app logic (e.g., tray icon state, alerts)
 - [ ] Integrate with Teamwork API to check timer status
 - [ ] Handle API errors and reuse prior state
 - [ ] Play audio alert if not on the clock during business hours
