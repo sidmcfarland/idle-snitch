@@ -8,6 +8,7 @@ IDLE Snitch is a Windows application built with .NET 8 and WinForms. The project
 - .gitignore configured for .NET/WinForms
 - NuGet dependencies installed: `Newtonsoft.Json`, `System.Configuration.ConfigurationManager`, `Microsoft.Windows.Compatibility`
 - Basic empty form launches successfully
+- Placeholder app icon added and embedded as a resource
 
 ## Quick Start
 
@@ -40,7 +41,7 @@ IDLE Snitch is a Windows application built with .NET 8 and WinForms. The project
    ```
 4. Run the application:
    ```sh
-   dotnet run --project src/IdleSnitch.csproj
+   dotnet run --project IdleSnitch.csproj
    ```
 
 ## Planned Features
