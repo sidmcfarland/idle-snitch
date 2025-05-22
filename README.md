@@ -123,6 +123,40 @@ IDLE Snitch supports configurable business hours. To set business hours:
 - If an icon asset is missing, an error message will be shown.
 - If the config file is missing or invalid, a message box will appear with details.
 
+## Configuration
+
+The application uses a configuration file at `config/appsettings.json` with the following structure:
+
+```json
+{
+  "BusinessHours": {
+    "Enabled": true,
+    "DaysOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "StartTime": "09:00",
+    "EndTime": "15:45"
+  },
+  "Teamwork": {
+    "ApiToken": "<your_teamwork_api_token>",
+    "BaseUrl": "https://<your_teamwork_domain>.teamwork.com"
+  }
+}
+```
+
+- **BusinessHours**: Defines the days and times considered business hours. The end time is now set to 3:45 PM Eastern (`15:45`).
+- **Teamwork**: Add your Teamwork API token and base URL to enable timer status integration.
+
+## Tray Icon Polling
+
+- The app polls the Teamwork API every 10 seconds to check your timer status and updates the tray icon accordingly.
+- If the Teamwork API is not configured or returns an error, the tray icon will show as Disabled.
+- If you manually set the tray icon to Snoozed, it will remain in that state until further logic is implemented to allow polling to override it after snooze expires (see development tasks).
+
+## Development & Testing Notes
+
+- The config file is now always copied to the output directory on build, ensuring the latest settings are used.
+- The business day end time is set to 3:45 PM Eastern.
+- There is a development test to ensure that the manual snooze state is overridden by Teamwork polling after snooze expires.
+
 ## Troubleshooting
 - If the tray icon disappears or the app crashes, ensure all icon files exist in the `assets/` folder and the config file is valid.
 - The form's icon now always matches the tray icon state.

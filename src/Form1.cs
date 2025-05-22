@@ -1,5 +1,8 @@
 using System.IO;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Media;
 
 namespace IdleSnitch;
 
@@ -20,15 +23,28 @@ public class BusinessHoursConfig
     public string? EndTime { get; set; }
 }
 
+public class TeamworkConfig
+{
+    public string? ApiToken { get; set; }
+    public string? BaseUrl { get; set; }
+}
+
 public class AppConfig
 {
     public BusinessHoursConfig? BusinessHours { get; set; }
+    public TeamworkConfig? Teamwork { get; set; }
 }
 
 public partial class Form1 : Form
 {
     private TrayIconState currentTrayIconState;
     private AppConfig? config;
+    private TeamworkApiClient? teamworkApiClient;
+    private bool? lastTimerStatus = null;
+    private System.Timers.Timer? pollTimer;
+    private int pollIntervalSeconds = 10;
+    private SoundPlayer? alertPlayer;
+    private string? alertSoundPath;
 
     public Form1()
     {
@@ -36,6 +52,65 @@ public partial class Form1 : Form
         LoadConfig();
         // Tray icon and icons are initialized in InitializeComponent
         currentTrayIconState = TrayIconState.ActiveOn;
+        InitializePolling();
+    }
+
+    private void InitializePolling()
+    {
+        pollTimer = new System.Timers.Timer(pollIntervalSeconds * 1000);
+        pollTimer.Elapsed += async (s, e) => await PollTimerStatusAsync();
+        pollTimer.AutoReset = true;
+        pollTimer.Enabled = true;
+    }
+
+    private async Task PollTimerStatusAsync()
+    {
+        try
+        {
+            string statusMsg;
+            if (!IsWithinBusinessHours())
+            {
+                SetTrayIconState(TrayIconState.Outside);
+                statusMsg = "Status: Outside business hours.";
+                MessageBox.Show(statusMsg, "IdleSnitch Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            if (config?.Teamwork != null)
+            {
+                // Debug: Show what values are being read from config
+                MessageBox.Show($"ApiToken: '{config.Teamwork.ApiToken ?? "<null>"}'\nBaseUrl: '{config.Teamwork.BaseUrl ?? "<null>"}'", "Debug: Teamwork Config");
+            }
+            if (config?.Teamwork != null && !string.IsNullOrEmpty(config.Teamwork.ApiToken) && !string.IsNullOrEmpty(config.Teamwork.BaseUrl))
+            {
+                teamworkApiClient ??= new TeamworkApiClient(config.Teamwork.ApiToken, config.Teamwork.BaseUrl);
+                bool isRunning = false;
+                try
+                {
+                    isRunning = await teamworkApiClient.IsTimerRunningAsync();
+                    lastTimerStatus = isRunning;
+                }
+                catch (Exception)
+                {
+                    if (lastTimerStatus.HasValue)
+                        isRunning = lastTimerStatus.Value;
+                    else
+                        throw;
+                }
+                SetTrayIconState(isRunning ? TrayIconState.ActiveOn : TrayIconState.ActiveOff);
+                statusMsg = isRunning ? "Status: Timer is running (ActiveOn)." : "Status: Timer is NOT running (ActiveOff).";
+                MessageBox.Show(statusMsg, "IdleSnitch Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                SetTrayIconState(TrayIconState.Disabled);
+                statusMsg = "Status: Teamwork API not configured (Disabled).";
+                MessageBox.Show(statusMsg, "IdleSnitch Status", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+        catch (Exception)
+        {
+            // Optionally log or show error
+        }
     }
 
     private void LoadConfig()
@@ -55,6 +130,11 @@ public partial class Form1 : Form
             var json = File.ReadAllText(configPath);
             config = JsonConvert.DeserializeObject<AppConfig>(json);
         }
+
+        // DEBUG: Log config file path and contents
+        var debugConfigPath = configPath;
+        var debugConfigJson = File.Exists(debugConfigPath) ? File.ReadAllText(debugConfigPath) : "<not found>";
+        MessageBox.Show($"Config path: {debugConfigPath}\nConfig contents:\n{debugConfigJson}", "DEBUG: Config File");
     }
 
     // Returns true if the current time is within configured business hours
@@ -79,26 +159,10 @@ public partial class Form1 : Form
     }
 
     // Example: update tray icon state based on business hours at startup
-    protected override void OnShown(EventArgs e)
+    protected override async void OnShown(EventArgs e)
     {
         base.OnShown(e);
-        try
-        {
-            if (!IsWithinBusinessHours())
-            {
-                SetTrayIconState(TrayIconState.Outside);
-            }
-            else
-            {
-                // TODO: Integrate with Teamwork API to check timer status
-                // For now, default to ActiveOn (on the clock) for demo purposes
-                SetTrayIconState(TrayIconState.ActiveOn);
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error in business hours logic: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
+        await PollTimerStatusAsync();
     }
 
     public void SetTrayIconState(TrayIconState state)

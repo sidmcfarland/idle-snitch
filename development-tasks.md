@@ -28,8 +28,8 @@ This document tracks all development tasks required to deliver the MVP as descri
     - [x] Load business hours from configuration at app startup
     - [x] Implement a method to determine if the current time is within business hours
     - [x] Integrate this check into the main app logic (e.g., tray icon state, alerts)
-- [ ] Integrate with Teamwork API to check timer status
-- [ ] Handle API errors and reuse prior state
+- [x] Integrate with Teamwork API to check timer status
+- [x] Handle API errors and reuse prior state
 - [ ] Play audio alert if not on the clock during business hours
 - [ ] Allow user to select audio alert file from system sounds
 - [ ] Implement snooze functionality (10, 30, 60 minutes)
@@ -64,6 +64,7 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [ ] Test audio alert and snooze
 - [ ] Test settings UI and persistence
 - [ ] Test auto-start on login
+- [ ] Test that manual snooze state is overridden by Teamwork polling after snooze expires
 - [ ] Review testing & QA: assess if additional test cases, automation, or manual QA steps are needed before moving to documentation
 - [ ] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
 
