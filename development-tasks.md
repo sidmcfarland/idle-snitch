@@ -10,7 +10,7 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [x] Set up initial NuGet dependencies (if any)
 - [x] Verify WinForms app runs (empty form)
 - [x] Add a 'Quick Start' section to the README with build/run instructions
-- [ ] Review .gitignore to ensure all build artifacts, user config, and secrets are ignored
+- [x] Review .gitignore to ensure all build artifacts, user config, and secrets are ignored (added *.user, config/*.json, secrets.*)
 - [ ] Add a placeholder app icon to the assets folder
 - [ ] Verify all solution folders (src, config, assets) are present and referenced as needed
 - [ ] Review project setup: assess if additional setup steps or tests are needed before moving to core features
