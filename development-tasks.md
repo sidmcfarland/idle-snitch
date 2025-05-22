@@ -18,9 +18,9 @@ This document tracks all development tasks required to deliver the MVP as descri
 
 ## Core Features
 - [ ] Implement tray icon with five state indications
-    - [ ] Define the five tray icon states and what each represents
-    - [ ] Prepare or collect five distinct icon assets and add to assets/
-    - [ ] Add NotifyIcon to the main form and load icons
+    - [x] Define the five tray icon states and what each represents
+    - [x] Prepare or collect five distinct icon assets and add to assets/
+    - [x] Add NotifyIcon to the main form and load icons
     - [ ] Implement logic to switch tray icon based on state
     - [ ] Add temporary UI or debug code to manually trigger each state for testing
 - [ ] Detect and respect configurable business hours

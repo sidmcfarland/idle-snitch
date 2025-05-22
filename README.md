@@ -56,6 +56,22 @@ The following setup steps have been completed:
    dotnet run --project IdleSnitch.csproj
    ```
 
+## Tray Icon States
+
+IDLE Snitch uses a tray icon with five distinct states to indicate your current status:
+
+- **Active & On the Clock:** User is within business hours and actively tracking time (`icon-active-on.ico`)
+- **Active & Off the Clock:** User is within business hours but not tracking time (`icon-active-off.png`)
+- **Snoozed:** Alerts are temporarily snoozed (`icon-snoozed.ico`)
+- **Outside Business Hours:** User is outside configured business hours (`icon-outside.ico`)
+- **Disabled:** App is manually disabled or not monitoring (`icon-disabled.ico`)
+
+The tray icon will update automatically based on your status. All icon assets are located in the `assets/` folder.
+
+## System Tray Integration
+
+The application uses the Windows system tray (via `NotifyIcon`) to display status and provide quick access to controls. Icons are loaded at startup and the tray icon is always visible while the app is running.
+
 ## Planned Features
 See `development-tasks.md` for the full list of planned features and development progress.
 
