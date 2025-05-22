@@ -9,8 +9,6 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [x] Configure .gitignore for .NET/WinForms
 - [x] Set up initial NuGet dependencies (if any)
 - [x] Verify WinForms app runs (empty form)
-- [ ] Add a unit test project to the solution
-- [ ] Add a basic build/test automation workflow (e.g., GitHub Actions)
 - [ ] Add a 'Quick Start' section to the README with build/run instructions
 - [ ] Review .gitignore to ensure all build artifacts, user config, and secrets are ignored
 - [ ] Add a placeholder app icon to the assets folder

@@ -19,4 +19,3 @@ IDLE Snitch is a Windows application built with .NET 8 and WinForms. The project
 See `development-tasks.md` for the full list of planned features and development progress.
 
 ---
-This README will be updated as new features and capabilities are added to the application.
