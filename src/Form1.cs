@@ -43,8 +43,7 @@ public partial class Form1 : Form
     private bool? lastTimerStatus = null;
     private System.Timers.Timer? pollTimer;
     private int pollIntervalSeconds = 10;
-    private SoundPlayer? alertPlayer;
-    private string? alertSoundPath;
+    private PictureBox apiActivityIcon; // Add a PictureBox for API activity
 
     public Form1()
     {
@@ -52,6 +51,16 @@ public partial class Form1 : Form
         LoadConfig();
         // Tray icon and icons are initialized in InitializeComponent
         currentTrayIconState = TrayIconState.ActiveOn;
+        // Initialize API activity icon
+        apiActivityIcon = new PictureBox
+        {
+            Image = SystemIcons.Information.ToBitmap(), // Use a standard info icon, can be replaced
+            SizeMode = PictureBoxSizeMode.AutoSize,
+            Visible = false,
+            Top = 8,
+            Left = 520 // Place to the right of debug buttons
+        };
+        this.Controls.Add(apiActivityIcon);
         InitializePolling();
     }
 
@@ -67,18 +76,15 @@ public partial class Form1 : Form
     {
         try
         {
-            string statusMsg;
+            apiActivityIcon.Invoke((Action)(() => apiActivityIcon.Visible = true));
             if (!IsWithinBusinessHours())
             {
                 SetTrayIconState(TrayIconState.Outside);
-                statusMsg = "Status: Outside business hours.";
-                MessageBox.Show(statusMsg, "IdleSnitch Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                apiActivityIcon.Invoke((Action)(() => apiActivityIcon.Visible = false));
                 return;
             }
             if (config?.Teamwork != null)
             {
-                // Debug: Show what values are being read from config
-                MessageBox.Show($"ApiToken: '{config.Teamwork.ApiToken ?? "<null>"}'\nBaseUrl: '{config.Teamwork.BaseUrl ?? "<null>"}'", "Debug: Teamwork Config");
             }
             if (config?.Teamwork != null && !string.IsNullOrEmpty(config.Teamwork.ApiToken) && !string.IsNullOrEmpty(config.Teamwork.BaseUrl))
             {
@@ -97,19 +103,19 @@ public partial class Form1 : Form
                         throw;
                 }
                 SetTrayIconState(isRunning ? TrayIconState.ActiveOn : TrayIconState.ActiveOff);
-                statusMsg = isRunning ? "Status: Timer is running (ActiveOn)." : "Status: Timer is NOT running (ActiveOff).";
-                MessageBox.Show(statusMsg, "IdleSnitch Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
                 SetTrayIconState(TrayIconState.Disabled);
-                statusMsg = "Status: Teamwork API not configured (Disabled).";
-                MessageBox.Show(statusMsg, "IdleSnitch Status", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         catch (Exception)
         {
             // Optionally log or show error
+        }
+        finally
+        {
+            apiActivityIcon.Invoke((Action)(() => apiActivityIcon.Visible = false));
         }
     }
 
@@ -130,11 +136,6 @@ public partial class Form1 : Form
             var json = File.ReadAllText(configPath);
             config = JsonConvert.DeserializeObject<AppConfig>(json);
         }
-
-        // DEBUG: Log config file path and contents
-        var debugConfigPath = configPath;
-        var debugConfigJson = File.Exists(debugConfigPath) ? File.ReadAllText(debugConfigPath) : "<not found>";
-        MessageBox.Show($"Config path: {debugConfigPath}\nConfig contents:\n{debugConfigJson}", "DEBUG: Config File");
     }
 
     // Returns true if the current time is within configured business hours
@@ -183,11 +184,6 @@ public partial class Form1 : Form
             trayIcon.Icon = trayIcons[key];
             trayIcon.Visible = true;
             this.Icon = trayIcons[key]; // Update the form's icon as well
-        }
-        else
-        {
-            // Show a message if the icon is missing
-            MessageBox.Show($"Tray icon asset missing or failed to load: {key}", "Tray Icon Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

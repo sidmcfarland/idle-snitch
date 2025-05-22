@@ -165,4 +165,8 @@ The application uses a configuration file at `config/appsettings.json` with the 
 ## Planned Features
 See `development-tasks.md` for the full list of planned features and development progress.
 
+## UI Indicators
+
+- The application now displays an API activity icon in the main window whenever a request is being made to the Teamwork API. This icon is only visible during the time between the request and the response, providing a visual indicator of background activity.
+
 ---

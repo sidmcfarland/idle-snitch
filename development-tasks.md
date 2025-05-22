@@ -30,6 +30,7 @@ This document tracks all development tasks required to deliver the MVP as descri
     - [x] Integrate this check into the main app logic (e.g., tray icon state, alerts)
 - [x] Integrate with Teamwork API to check timer status
 - [x] Handle API errors and reuse prior state
+- [x] Add API activity indicator icon to UI that is visible only during Teamwork API requests
 - [ ] Play audio alert if not on the clock during business hours
 - [ ] Allow user to select audio alert file from system sounds
 - [ ] Implement snooze functionality (10, 30, 60 minutes)
