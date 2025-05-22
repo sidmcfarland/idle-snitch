@@ -13,7 +13,7 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [x] Review .gitignore to ensure all build artifacts, user config, and secrets are ignored (added *.user, config/*.json, secrets.*)
 - [x] Add a placeholder app icon to the assets folder
 - [x] Verify all solution folders (src, config, assets) are present and referenced as needed
-- [ ] Review project setup: assess if additional setup steps or tests are needed before moving to core features
+- [x] Review project setup: assess if additional setup steps or tests are needed before moving to core features
 - [ ] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
 - [ ] Update README with all project setup changes
 
