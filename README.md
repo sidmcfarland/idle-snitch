@@ -68,6 +68,23 @@ IDLE Snitch uses a tray icon with five distinct states to indicate your current 
 
 The tray icon will update automatically based on your status. All icon assets are located in the `assets/` folder.
 
+## Tray Icon State Switching
+
+The application supports five tray icon states:
+- ActiveOn
+- ActiveOff
+- Snoozed
+- Outside
+- Disabled
+
+To programmatically change the tray icon, use the following method in `Form1`:
+
+```csharp
+SetTrayIconState(TrayIconState.StateName);
+```
+
+Replace `StateName` with one of the enum values above. The tray icon will update to reflect the current state.
+
 ## System Tray Integration
 
 The application uses the Windows system tray (via `NotifyIcon`) to display status and provide quick access to controls. Icons are loaded at startup and the tray icon is always visible while the app is running.
