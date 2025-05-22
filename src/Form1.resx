@@ -13,6 +13,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\assets\icon.ico;System.Drawing.Icon, System.Drawing.Common</value>
+    <value>..\assets\icon-active-on.ico;System.Drawing.Icon, System.Drawing.Common</value>
   </data>
 </root>
