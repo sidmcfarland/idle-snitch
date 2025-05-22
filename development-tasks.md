@@ -31,7 +31,10 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [x] Integrate with Teamwork API to check timer status
 - [x] Handle API errors and reuse prior state
 - [x] Add API activity indicator icon to UI that is visible only during Teamwork API requests
-- [ ] Play audio alert if not on the clock during business hours
+- [x] Play audio alert if not on the clock during business hours
+    - [x] Use Windows "Message Nudge" system sound if available, fallback to Exclamation
+    - [x] Show message box for debugging when alert is triggered
+    - [x] Alert triggers only if not on the clock, within business hours
 - [ ] Allow user to select audio alert file from system sounds
 - [ ] Implement snooze functionality (10, 30, 60 minutes)
 - [ ] Reflect snoozed state in tray icon
@@ -61,7 +64,10 @@ This document tracks all development tasks required to deliver the MVP as descri
 ## Testing & QA
 - [ ] Test all tray icon states
 - [ ] Test business hour detection and transitions
-- [ ] Test Teamwork API integration and error handling
+- [x] Test Teamwork API integration and error handling
+    - [x] Update Teamwork API integration to use /me/timers.json?runningTimersOnly=true
+    - [x] Check 'timers' array in response to determine running status
+    - [x] Improved error reporting for API failures
 - [ ] Test audio alert and snooze
 - [ ] Test settings UI and persistence
 - [ ] Test auto-start on login

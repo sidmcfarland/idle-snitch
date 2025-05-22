@@ -25,15 +25,16 @@ namespace IdleSnitch
         // Returns true if a timer is currently running for the user
         public async Task<bool> IsTimerRunningAsync()
         {
-            var url = $"{_baseUrl}/me/time_entries.json?filter=active";
+            // Use the correct endpoint for running timers
+            var url = $"{_baseUrl}/me/timers.json?runningTimersOnly=true";
             var response = await _httpClient.GetAsync(url);
             if (!response.IsSuccessStatusCode)
-                throw new Exception($"Teamwork API error: {response.StatusCode}");
+                throw new Exception($"Teamwork API error: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
             var json = await response.Content.ReadAsStringAsync();
             var obj = JObject.Parse(json);
-            // Teamwork returns an array of time-entries; if any are running, the array is non-empty
-            var entries = obj["time-entries"] as JArray;
-            return entries != null && entries.Count > 0;
+            // The response contains a 'timers' array; if any are present, a timer is running
+            var timers = obj["timers"] as JArray;
+            return timers != null && timers.Count > 0;
         }
     }
 }

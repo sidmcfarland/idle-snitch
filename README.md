@@ -169,4 +169,14 @@ See `development-tasks.md` for the full list of planned features and development
 
 - The application now displays an API activity icon in the main window whenever a request is being made to the Teamwork API. This icon is only visible during the time between the request and the response, providing a visual indicator of background activity.
 
+## Audio Alert Improvements
+- The app now plays the Windows "Message Nudge" system sound (if available) when you are within business hours but not on the clock. If the sound file is not found, it falls back to the Exclamation system sound.
+- A message box appears for debugging whenever the nudge alert is triggered, so you can verify alert timing even if the sound is not audible.
+- The alert is triggered only once per polling interval if you are not on the clock.
+
+## Teamwork API Integration Update
+- The Teamwork timer check now uses the correct endpoint: `/me/timers.json?runningTimersOnly=true`.
+- The app checks the `timers` array in the response to determine if any timers are running.
+- Improved error reporting for API failures.
+
 ---

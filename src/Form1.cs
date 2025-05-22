@@ -95,7 +95,7 @@ public partial class Form1 : Form
                     isRunning = await teamworkApiClient.IsTimerRunningAsync();
                     lastTimerStatus = isRunning;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     if (lastTimerStatus.HasValue)
                         isRunning = lastTimerStatus.Value;
@@ -103,6 +103,11 @@ public partial class Form1 : Form
                         throw;
                 }
                 SetTrayIconState(isRunning ? TrayIconState.ActiveOn : TrayIconState.ActiveOff);
+                // Play nudge alert if not on the clock (ActiveOff) and at least 60 seconds since last alert
+                if (!isRunning)
+                {
+                    PlayNudgeAlert();
+                }
             }
             else
             {
@@ -117,6 +122,26 @@ public partial class Form1 : Form
         {
             apiActivityIcon.Invoke((Action)(() => apiActivityIcon.Visible = false));
         }
+    }
+
+    private void PlayNudgeAlert()
+    {
+        try
+        {
+            // Play the Windows "Message Nudge" system sound if available
+            string nudgePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Media", "Windows Message Nudge.wav");
+            if (File.Exists(nudgePath))
+            {
+                using var player = new SoundPlayer(nudgePath);
+                player.Play();
+            }
+            else
+            {
+                // Fallback to Exclamation if nudge sound is not found
+                SystemSounds.Exclamation.Play();
+            }
+        }
+        catch { /* Optionally log or ignore errors */ }
     }
 
     private void LoadConfig()
