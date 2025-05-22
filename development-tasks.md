@@ -5,8 +5,8 @@ This document tracks all development tasks required to deliver the MVP as descri
 ## Project Setup
 - [x] Create new .NET 8 WinForms project
 - [x] Set up solution and project folders (e.g., src, config, assets)
-- [ ] Add initial README and LICENSE files
-- [ ] Configure .gitignore for .NET/WinForms
+- [x] Add initial README and LICENSE files
+- [x] Configure .gitignore for .NET/WinForms
 - [ ] Set up initial NuGet dependencies (if any)
 - [ ] Verify WinForms app runs (empty form)
 
