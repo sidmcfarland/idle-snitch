@@ -66,7 +66,7 @@ IDLE Snitch uses a tray icon with five distinct states to indicate your current 
 - **Outside Business Hours:** User is outside configured business hours (`icon-outside.ico`)
 - **Disabled:** App is manually disabled or not monitoring (`icon-disabled.ico`)
 
-The tray icon will update automatically based on your status. All icon assets are located in the `assets/` folder.
+The tray icon updates automatically based on your status. All icon assets are located in the `assets/` folder.
 
 ## Tray Icon State Switching
 
@@ -77,25 +77,7 @@ The application supports five tray icon states:
 - Outside
 - Disabled
 
-To programmatically change the tray icon, use the following method in `Form1`:
-
-```csharp
-SetTrayIconState(TrayIconState.StateName);
-```
-
-Replace `StateName` with one of the enum values above. The tray icon will update to reflect the current state.
-
-## Temporary Debug UI for Tray Icon States
-
-For development and testing, a temporary debug panel is included at the top of the main window. This panel contains five buttons:
-
-- **Active On**
-- **Active Off**
-- **Snoozed**
-- **Outside**
-- **Disabled**
-
-Clicking any of these buttons will manually set the tray icon to the corresponding state. This allows you to quickly verify that each tray icon and state logic is working as expected. The debug panel is only present for development and can be removed for production builds.
+The tray icon state is managed automatically by the application logic. There is no manual or debug UI for changing the tray icon state.
 
 ## System Tray Integration
 
@@ -164,10 +146,6 @@ The application uses a configuration file at `config/appsettings.json` with the 
 
 ## Planned Features
 See `development-tasks.md` for the full list of planned features and development progress.
-
-## UI Indicators
-
-- The application now displays an API activity icon in the main window whenever a request is being made to the Teamwork API. This icon is only visible during the time between the request and the response, providing a visual indicator of background activity.
 
 ## Audio Alert Improvements
 - The app now plays the Windows "Message Nudge" system sound (if available) when you are within business hours but not on the clock. If the sound file is not found, it falls back to the Exclamation system sound.

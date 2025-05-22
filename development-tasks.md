@@ -43,6 +43,8 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [ ] Register app to auto-start on Windows login
 - [ ] Review core features: assess if additional features, tests, or refactoring are needed before moving to non-functional tasks
 - [ ] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
+- [x] Remove temporary debug UI and code for manual tray icon state switching
+- [x] Remove API activity indicator icon and all related code
 
 ## Non-Functional
 - [ ] Store config securely in user-accessible location
@@ -60,6 +62,7 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [ ] Register auto-start in HKCU registry
 - [ ] Review development notes: assess if additional implementation notes, tests, or documentation are needed before moving to testing & QA
 - [ ] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
+- Removed notes about debug panel/buttons and API activity icon
 
 ## Testing & QA
 - [ ] Test all tray icon states

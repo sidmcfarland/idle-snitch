@@ -43,7 +43,6 @@ public partial class Form1 : Form
     private bool? lastTimerStatus = null;
     private System.Timers.Timer? pollTimer;
     private int pollIntervalSeconds = 10;
-    private PictureBox apiActivityIcon; // Add a PictureBox for API activity
 
     public Form1()
     {
@@ -51,16 +50,6 @@ public partial class Form1 : Form
         LoadConfig();
         // Tray icon and icons are initialized in InitializeComponent
         currentTrayIconState = TrayIconState.ActiveOn;
-        // Initialize API activity icon
-        apiActivityIcon = new PictureBox
-        {
-            Image = SystemIcons.Information.ToBitmap(), // Use a standard info icon, can be replaced
-            SizeMode = PictureBoxSizeMode.AutoSize,
-            Visible = false,
-            Top = 8,
-            Left = 520 // Place to the right of debug buttons
-        };
-        this.Controls.Add(apiActivityIcon);
         InitializePolling();
     }
 
@@ -76,11 +65,9 @@ public partial class Form1 : Form
     {
         try
         {
-            apiActivityIcon.Invoke((Action)(() => apiActivityIcon.Visible = true));
             if (!IsWithinBusinessHours())
             {
                 SetTrayIconState(TrayIconState.Outside);
-                apiActivityIcon.Invoke((Action)(() => apiActivityIcon.Visible = false));
                 return;
             }
             if (config?.Teamwork != null)
@@ -95,7 +82,7 @@ public partial class Form1 : Form
                     isRunning = await teamworkApiClient.IsTimerRunningAsync();
                     lastTimerStatus = isRunning;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     if (lastTimerStatus.HasValue)
                         isRunning = lastTimerStatus.Value;
@@ -117,10 +104,6 @@ public partial class Form1 : Form
         catch (Exception)
         {
             // Optionally log or show error
-        }
-        finally
-        {
-            apiActivityIcon.Invoke((Action)(() => apiActivityIcon.Visible = false));
         }
     }
 
@@ -210,26 +193,5 @@ public partial class Form1 : Form
             trayIcon.Visible = true;
             this.Icon = trayIcons[key]; // Update the form's icon as well
         }
-    }
-
-    private void btnActiveOn_Click(object sender, EventArgs e)
-    {
-        SetTrayIconState(TrayIconState.ActiveOn);
-    }
-    private void btnActiveOff_Click(object sender, EventArgs e)
-    {
-        SetTrayIconState(TrayIconState.ActiveOff);
-    }
-    private void btnSnoozed_Click(object sender, EventArgs e)
-    {
-        SetTrayIconState(TrayIconState.Snoozed);
-    }
-    private void btnOutside_Click(object sender, EventArgs e)
-    {
-        SetTrayIconState(TrayIconState.Outside);
-    }
-    private void btnDisabled_Click(object sender, EventArgs e)
-    {
-        SetTrayIconState(TrayIconState.Disabled);
     }
 }
