@@ -17,12 +17,12 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [x] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
 
 ## Core Features
-- [ ] Implement tray icon with five state indications
+- [x] Implement tray icon with five state indications
     - [x] Define the five tray icon states and what each represents
     - [x] Prepare or collect five distinct icon assets and add to assets/
     - [x] Add NotifyIcon to the main form and load icons
     - [x] Implement logic to switch tray icon based on state
-    - [ ] Add temporary UI or debug code to manually trigger each state for testing
+    - [x] Add temporary UI or debug code to manually trigger each state for testing
 - [ ] Detect and respect configurable business hours
 - [ ] Integrate with Teamwork API to check timer status
 - [ ] Handle API errors and reuse prior state

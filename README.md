@@ -61,7 +61,7 @@ The following setup steps have been completed:
 IDLE Snitch uses a tray icon with five distinct states to indicate your current status:
 
 - **Active & On the Clock:** User is within business hours and actively tracking time (`icon-active-on.ico`)
-- **Active & Off the Clock:** User is within business hours but not tracking time (`icon-active-off.png`)
+- **Active & Off the Clock:** User is within business hours but not tracking time (`icon-active-off.ico`)
 - **Snoozed:** Alerts are temporarily snoozed (`icon-snoozed.ico`)
 - **Outside Business Hours:** User is outside configured business hours (`icon-outside.ico`)
 - **Disabled:** App is manually disabled or not monitoring (`icon-disabled.ico`)
@@ -84,6 +84,18 @@ SetTrayIconState(TrayIconState.StateName);
 ```
 
 Replace `StateName` with one of the enum values above. The tray icon will update to reflect the current state.
+
+## Temporary Debug UI for Tray Icon States
+
+For development and testing, a temporary debug panel is included at the top of the main window. This panel contains five buttons:
+
+- **Active On**
+- **Active Off**
+- **Snoozed**
+- **Outside**
+- **Disabled**
+
+Clicking any of these buttons will manually set the tray icon to the corresponding state. This allows you to quickly verify that each tray icon and state logic is working as expected. The debug panel is only present for development and can be removed for production builds.
 
 ## System Tray Integration
 

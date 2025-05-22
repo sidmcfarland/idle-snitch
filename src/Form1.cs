@@ -38,4 +38,25 @@ public partial class Form1 : Form
             trayIcon.Icon = trayIcons[key];
         }
     }
+
+    private void btnActiveOn_Click(object sender, EventArgs e)
+    {
+        SetTrayIconState(TrayIconState.ActiveOn);
+    }
+    private void btnActiveOff_Click(object sender, EventArgs e)
+    {
+        SetTrayIconState(TrayIconState.ActiveOff);
+    }
+    private void btnSnoozed_Click(object sender, EventArgs e)
+    {
+        SetTrayIconState(TrayIconState.Snoozed);
+    }
+    private void btnOutside_Click(object sender, EventArgs e)
+    {
+        SetTrayIconState(TrayIconState.Outside);
+    }
+    private void btnDisabled_Click(object sender, EventArgs e)
+    {
+        SetTrayIconState(TrayIconState.Disabled);
+    }
 }
