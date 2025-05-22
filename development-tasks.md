@@ -7,8 +7,9 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [x] Set up solution and project folders (e.g., src, config, assets)
 - [x] Add initial README and LICENSE files
 - [x] Configure .gitignore for .NET/WinForms
-- [ ] Set up initial NuGet dependencies (if any)
-- [ ] Verify WinForms app runs (empty form)
+- [x] Set up initial NuGet dependencies (if any)
+- [x] Verify WinForms app runs (empty form)
+- [ ] Review project setup: assess if additional setup steps or tests are needed before moving to core features
 
 ## Core Features
 - [ ] Implement tray icon with five state indications
@@ -22,12 +23,14 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [ ] Provide settings UI (API token, business hours, audio file, enable/disable)
 - [ ] Manual enable/disable toggle via tray menu
 - [ ] Register app to auto-start on Windows login
+- [ ] Review core features: assess if additional features, tests, or refactoring are needed before moving to non-functional tasks
 
 ## Non-Functional
 - [ ] Store config securely in user-accessible location
 - [ ] Ensure minimal resource usage (poll every 60 seconds)
 - [ ] Target .NET 8 and WinForms
 - [ ] Support Windows 10+
+- [ ] Review non-functional requirements: assess if additional requirements, tests, or optimizations are needed before moving to development notes
 
 ## Development Notes
 - [ ] Use NotifyIcon and ContextMenuStrip for tray UI
@@ -35,6 +38,7 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [ ] Use System.Timers.Timer for polling
 - [ ] Store config in user.config or JSON in %APPDATA%
 - [ ] Register auto-start in HKCU registry
+- [ ] Review development notes: assess if additional implementation notes, tests, or documentation are needed before moving to testing & QA
 
 ## Testing & QA
 - [ ] Test all tray icon states
@@ -43,10 +47,12 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [ ] Test audio alert and snooze
 - [ ] Test settings UI and persistence
 - [ ] Test auto-start on login
+- [ ] Review testing & QA: assess if additional test cases, automation, or manual QA steps are needed before moving to documentation
 
 ## Documentation
 - [ ] Update README with setup and usage instructions
 - [ ] Document configuration and troubleshooting steps
+- [ ] Review documentation: assess if additional documentation, diagrams, or user guides are needed before project completion
 
 ---
 Add, update, or check off tasks as development progresses.
