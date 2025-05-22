@@ -22,7 +22,7 @@ IDLE Snitch is a Windows application built with .NET 8 and WinForms. The project
    ```sh
    git clone https://github.com/yourusername/idle-snitch.git
    ```
-2. Open `idle-snitch.sln` in Visual Studio.
+2. Open `IdleSnitch.csproj` in Visual Studio.
 3. Restore NuGet packages (should happen automatically on open).
 4. Press `F5` to build and run the application.
 
