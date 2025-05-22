@@ -14,8 +14,7 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [x] Add a placeholder app icon to the assets folder
 - [x] Verify all solution folders (src, config, assets) are present and referenced as needed
 - [x] Review project setup: assess if additional setup steps or tests are needed before moving to core features
-- [ ] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
-- [ ] Update README with all project setup changes
+- [x] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
 
 ## Core Features
 - [ ] Implement tray icon with five state indications
@@ -31,7 +30,6 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [ ] Register app to auto-start on Windows login
 - [ ] Review core features: assess if additional features, tests, or refactoring are needed before moving to non-functional tasks
 - [ ] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
-- [ ] Update README with all core feature changes
 
 ## Non-Functional
 - [ ] Store config securely in user-accessible location
@@ -40,7 +38,6 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [ ] Support Windows 10+
 - [ ] Review non-functional requirements: assess if additional requirements, tests, or optimizations are needed before moving to development notes
 - [ ] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
-- [ ] Update README with all non-functional requirement changes
 
 ## Development Notes
 - [ ] Use NotifyIcon and ContextMenuStrip for tray UI
@@ -50,7 +47,6 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [ ] Register auto-start in HKCU registry
 - [ ] Review development notes: assess if additional implementation notes, tests, or documentation are needed before moving to testing & QA
 - [ ] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
-- [ ] Update README with all development notes changes
 
 ## Testing & QA
 - [ ] Test all tray icon states
@@ -61,14 +57,12 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [ ] Test auto-start on login
 - [ ] Review testing & QA: assess if additional test cases, automation, or manual QA steps are needed before moving to documentation
 - [ ] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
-- [ ] Update README with all testing & QA changes
 
 ## Documentation
 - [ ] Update README with setup and usage instructions
 - [ ] Document configuration and troubleshooting steps
 - [ ] Review documentation: assess if additional documentation, diagrams, or user guides are needed before project completion
 - [ ] Add or update any tasks in any section to reflect new or modified tasks based on the work completed so far
-- [ ] Update README with all documentation changes
 
 ---
 Add, update, or check off tasks as development progresses.
