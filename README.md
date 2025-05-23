@@ -42,6 +42,28 @@ IDLE Snitch is a Windows application built with .NET 8 and WinForms. The project
 - All icon files and config are included in the output directory for reliable deployment.
 - No settings or user data are overwritten on build or publish.
 
+## Portable Windows App Distribution
+
+You can run IDLE Snitch on any Windows PC without installing Visual Studio, VS Code, or .NET.
+
+## How to Build a Portable Release (for Maintainers)
+
+1. Open PowerShell in the project root.
+2. Run:
+   ```powershell
+   ./publish.ps1
+   ```
+   This will create a `IdleSnitch-portable.zip` file in the project root.
+
+## How to Use (for End Users)
+
+1. [Download the latest release zip](https://github.com/yourusername/yourrepo/releases) or get `IdleSnitch-portable.zip` from the maintainer.
+2. Extract the zip file anywhere.
+3. Double-click `IdleSnitch.exe` to run the app.
+4. The app will appear in your system tray.
+
+No installation or additional software required!
+
 ## Planned Features & Development Progress
 See `development-tasks.md` for the full list of planned features and development progress.
 
