@@ -35,7 +35,8 @@ public class AppConfig
 {
     public BusinessHoursConfig? BusinessHours { get; set; }
     public TeamworkConfig? Teamwork { get; set; }
-    public string? AudioAlertFile { get; set; } // Add this property
+    public string? AudioAlertFile { get; set; }
+    public int? AlertIntervalSeconds { get; set; } // New property
 }
 
 public partial class Form1 : Form
@@ -46,7 +47,9 @@ public partial class Form1 : Form
     private bool? lastTimerStatus = null;
     private System.Timers.Timer? pollTimer;
     private int pollIntervalSeconds = 10;
+    private int alertIntervalSeconds = 60; // Default value
     private string selectedAudioAlert = "Windows Message Nudge.wav";
+    private string tempSelectedAudioAlert = "";
     private static readonly string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IdleSnitch.log");
 
     public Form1()
@@ -65,6 +68,14 @@ public partial class Form1 : Form
         this.ShowInTaskbar = false;
         this.Hide();
         tabControlSettings.SelectedIndexChanged += tabControlSettings_SelectedIndexChanged;
+        buttonSaveSettings.Click += ButtonSaveSettings_Click;
+        buttonCancelSettings.Click += ButtonCancelSettings_Click;
+        LoadSettingsToUI();
+        tempSelectedAudioAlert = selectedAudioAlert;
+        comboBoxAudioAlert.SelectedIndexChanged -= ComboBoxAudioAlert_SelectedIndexChanged;
+        comboBoxAudioAlert.SelectedIndexChanged += ComboBoxAudioAlert_SelectedIndexChanged;
+        alertIntervalSeconds = config?.AlertIntervalSeconds ?? 60;
+        pollIntervalSeconds = alertIntervalSeconds;
     }
 
     private void InitializePolling()
@@ -154,28 +165,24 @@ public partial class Form1 : Form
         // Ensure selectedAudioAlert is set to config value if available
         if (config != null && !string.IsNullOrEmpty(config.AudioAlertFile))
             selectedAudioAlert = config.AudioAlertFile;
+        tempSelectedAudioAlert = selectedAudioAlert;
         // Set ComboBox selection
-        if (available.Contains(selectedAudioAlert))
-            comboBoxAudioAlert.SelectedItem = selectedAudioAlert;
+        if (available.Contains(tempSelectedAudioAlert))
+            comboBoxAudioAlert.SelectedItem = tempSelectedAudioAlert;
         else if (available.Count > 0)
             comboBoxAudioAlert.SelectedIndex = 0;
-        comboBoxAudioAlert.SelectedIndexChanged -= ComboBoxAudioAlert_SelectedIndexChanged;
-        comboBoxAudioAlert.SelectedIndexChanged += ComboBoxAudioAlert_SelectedIndexChanged;
     }
 
     private void ComboBoxAudioAlert_SelectedIndexChanged(object? sender, EventArgs e)
     {
         if (comboBoxAudioAlert.SelectedItem is string selected)
         {
-            selectedAudioAlert = selected;
-            SaveConfig();
-            // Log selected audio file
-            Log($"Selected audio alert: {selectedAudioAlert}");
-            // Play the selected sound immediately
+            tempSelectedAudioAlert = selected;
+            // Play the selected sound immediately for preview
             try
             {
                 string mediaDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Media");
-                string selectedPath = Path.Combine(mediaDir, selectedAudioAlert);
+                string selectedPath = Path.Combine(mediaDir, tempSelectedAudioAlert);
                 if (File.Exists(selectedPath))
                 {
                     using var player = new SoundPlayer(selectedPath);
@@ -225,6 +232,11 @@ public partial class Form1 : Form
                     Log($"Teamwork.BaseUrl = {config.Teamwork.BaseUrl}");
                 }
                 Log($"AudioAlertFile = {config.AudioAlertFile}");
+                if (config.AlertIntervalSeconds.HasValue)
+                    alertIntervalSeconds = config.AlertIntervalSeconds.Value;
+                else
+                    alertIntervalSeconds = 60;
+                pollIntervalSeconds = alertIntervalSeconds;
             }
             if (config != null && !string.IsNullOrEmpty(config.AudioAlertFile))
             {
@@ -358,5 +370,82 @@ public partial class Form1 : Form
                 textBoxLog.Text = $"Error reading log file: {ex.Message}";
             }
         }
+    }
+
+    private void LoadSettingsToUI()
+    {
+        if (config?.BusinessHours != null)
+        {
+            checkBoxBusinessHoursEnabled.Checked = config.BusinessHours.Enabled;
+            checkedListBoxDaysOfWeek.ClearSelected();
+            for (int i = 0; i < checkedListBoxDaysOfWeek.Items.Count; i++)
+            {
+                var itemObj = checkedListBoxDaysOfWeek.Items[i];
+                string? day = itemObj?.ToString();
+                bool isChecked = false;
+                if (!string.IsNullOrEmpty(day) && config.BusinessHours.DaysOfWeek != null)
+                    isChecked = config.BusinessHours.DaysOfWeek.Contains(day);
+                checkedListBoxDaysOfWeek.SetItemChecked(i, isChecked);
+            }
+            textBoxStartTime.Text = config.BusinessHours.StartTime ?? "";
+            textBoxEndTime.Text = config.BusinessHours.EndTime ?? "";
+        }
+        if (config?.Teamwork != null)
+        {
+            textBoxApiToken.Text = config.Teamwork.ApiToken ?? "";
+            textBoxBaseUrl.Text = config.Teamwork.BaseUrl ?? "";
+        }
+        // Audio alert
+        if (config != null && !string.IsNullOrEmpty(config.AudioAlertFile))
+            tempSelectedAudioAlert = config.AudioAlertFile;
+        else
+            tempSelectedAudioAlert = "Windows Message Nudge.wav";
+        if (comboBoxAudioAlert.Items.Contains(tempSelectedAudioAlert))
+            comboBoxAudioAlert.SelectedItem = tempSelectedAudioAlert;
+        if (textBoxAlertInterval != null)
+            textBoxAlertInterval.Text = (config?.AlertIntervalSeconds ?? 60).ToString();
+    }
+
+    private void SaveUIToSettings()
+    {
+        if (config == null) config = new AppConfig();
+        if (config.BusinessHours == null) config.BusinessHours = new BusinessHoursConfig();
+        config.BusinessHours.Enabled = checkBoxBusinessHoursEnabled.Checked;
+        config.BusinessHours.DaysOfWeek = checkedListBoxDaysOfWeek.CheckedItems.Cast<string>().ToList();
+        config.BusinessHours.StartTime = textBoxStartTime.Text.Trim();
+        config.BusinessHours.EndTime = textBoxEndTime.Text.Trim();
+        if (config.Teamwork == null) config.Teamwork = new TeamworkConfig();
+        config.Teamwork.ApiToken = textBoxApiToken.Text.Trim();
+        config.Teamwork.BaseUrl = textBoxBaseUrl.Text.Trim();
+        // AudioAlertFile is now handled here
+        config.AudioAlertFile = tempSelectedAudioAlert;
+        selectedAudioAlert = tempSelectedAudioAlert;
+        if (textBoxAlertInterval != null && int.TryParse(textBoxAlertInterval.Text.Trim(), out int interval) && interval > 0)
+            config.AlertIntervalSeconds = interval;
+        else
+            config.AlertIntervalSeconds = 60;
+        alertIntervalSeconds = config.AlertIntervalSeconds.Value;
+        pollIntervalSeconds = alertIntervalSeconds;
+    }
+
+    private void ButtonSaveSettings_Click(object? sender, EventArgs e)
+    {
+        SaveUIToSettings();
+        SaveConfig();
+        LoadSettingsToUI();
+        this.Hide();
+    }
+
+    private void ButtonCancelSettings_Click(object? sender, EventArgs e)
+    {
+        // Restore tempSelectedAudioAlert to match config
+        if (config != null && !string.IsNullOrEmpty(config.AudioAlertFile))
+            tempSelectedAudioAlert = config.AudioAlertFile;
+        else
+            tempSelectedAudioAlert = "Windows Message Nudge.wav";
+        if (comboBoxAudioAlert.Items.Contains(tempSelectedAudioAlert))
+            comboBoxAudioAlert.SelectedItem = tempSelectedAudioAlert;
+        LoadSettingsToUI();
+        this.Hide();
     }
 }

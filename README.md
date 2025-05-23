@@ -9,12 +9,15 @@ IDLE Snitch is a Windows application built with .NET 8 and WinForms. The project
 - Configurable business hours
 - Teamwork API integration for timer status
 - Audio alert if not on the clock during business hours (user-selectable from all Windows system sounds)
+- **Configurable alert interval (seconds) for how often the app checks and alerts**
 - Settings UI with tabbed interface
-  - General tab: select audio notification, configure business hours, API token, etc.
+  - General tab: select audio notification, configure business hours, API token, alert interval, etc.
   - Log tab: view application log file
+- **All settings changes (including audio alert) are only saved when you click Save. Cancel discards all changes.**
 - Settings and log file are persisted in the output directory and not overwritten on rebuild
 - All icon assets and config files are reliably copied to the output directory
 - Robust logging of all key events, settings changes, and application lifecycle
+- **Modern, scalable settings UI adapts to high-DPI and display scaling**
 
 ## Project Setup
 - .NET 8 WinForms project
@@ -26,13 +29,14 @@ IDLE Snitch is a Windows application built with .NET 8 and WinForms. The project
 1. Build and run the solution in Visual Studio or VS Code.
 2. The app will appear in the system tray.
 3. Right-click the tray icon and select Settings to open the tabbed settings window.
-4. Configure your business hours, Teamwork API token, and select your preferred audio notification.
+4. Configure your business hours, Teamwork API token, alert interval, and select your preferred audio notification.
 5. View the application log in the Log tab.
 
 ## Configuration & Persistence
 - All user settings are stored in `bin/Debug/net8.0-windows/config/appsettings.json` (or the equivalent output directory).
 - The settings file is only copied from the source if it does not already exist, so user changes persist.
 - The log file is stored as `IdleSnitch.log` in the output directory.
+- `AlertIntervalSeconds`: How often (in seconds) the app checks and alerts if you are not on the clock (default: 60)
 
 ## Deployment
 - All icon files and config are included in the output directory for reliable deployment.

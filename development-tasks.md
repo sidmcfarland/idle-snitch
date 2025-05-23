@@ -56,6 +56,10 @@ This document tracks all development tasks required to deliver the MVP as descri
     - [x] Optionally, add a Reset to Defaults button
     - [x] Add a tabbed interface to the settings form
     - [x] Add a Log tab that displays the contents of the log file
+    - [x] Add setting for alert interval (seconds) with default 60
+    - [x] Show alert interval in settings UI and save only on Save
+    - [x] Refactor settings UI to be fully scalable and high-DPI friendly
+    - [x] Ensure all settings (including audio alert) are only saved when Save is clicked; Cancel discards changes
 - [x] Manual enable/disable toggle via tray menu
 - [x] Register app to auto-start on Windows login
 - [x] Review core features: assess if additional features, tests, or refactoring are needed before moving to non-functional tasks
