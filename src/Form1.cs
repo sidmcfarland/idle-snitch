@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Media;
+using System.Linq;
+using System.Diagnostics;
 
 namespace IdleSnitch;
 
@@ -33,6 +35,7 @@ public class AppConfig
 {
     public BusinessHoursConfig? BusinessHours { get; set; }
     public TeamworkConfig? Teamwork { get; set; }
+    public string? AudioAlertFile { get; set; } // Add this property
 }
 
 public partial class Form1 : Form
@@ -43,20 +46,25 @@ public partial class Form1 : Form
     private bool? lastTimerStatus = null;
     private System.Timers.Timer? pollTimer;
     private int pollIntervalSeconds = 10;
+    private string selectedAudioAlert = "Windows Message Nudge.wav";
+    private static readonly string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IdleSnitch.log");
 
     public Form1()
     {
         InitializeComponent();
-        this.MaximizeBox = false;
-        this.MinimizeBox = false;
-        this.FormBorderStyle = FormBorderStyle.FixedDialog;
+        // Restore minimize and maximize box functionality
+        this.MaximizeBox = true;
+        this.MinimizeBox = true;
+        Log("Application started");
         LoadConfig();
         // Tray icon and icons are initialized in InitializeComponent
         currentTrayIconState = TrayIconState.ActiveOn;
         InitializePolling();
+        InitializeAudioAlertComboBox();
         this.WindowState = FormWindowState.Minimized;
         this.ShowInTaskbar = false;
         this.Hide();
+        tabControlSettings.SelectedIndexChanged += tabControlSettings_SelectedIndexChanged;
     }
 
     private void InitializePolling()
@@ -117,39 +125,142 @@ public partial class Form1 : Form
     {
         try
         {
-            // Play the Windows "Message Nudge" system sound if available
-            string nudgePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Media", "Windows Message Nudge.wav");
-            if (File.Exists(nudgePath))
+            string mediaDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Media");
+            string selectedPath = Path.Combine(mediaDir, selectedAudioAlert);
+            if (File.Exists(selectedPath))
             {
-                using var player = new SoundPlayer(nudgePath);
+                using var player = new SoundPlayer(selectedPath);
                 player.Play();
             }
             else
             {
-                // Fallback to Exclamation if nudge sound is not found
                 SystemSounds.Exclamation.Play();
             }
         }
         catch { /* Optionally log or ignore errors */ }
     }
 
+    private void InitializeAudioAlertComboBox()
+    {
+        string mediaDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Media");
+        var available = Directory.GetFiles(mediaDir, "*.wav")
+            .Select(Path.GetFileName)
+            .OrderBy(f => f)
+            .ToList();
+        comboBoxAudioAlert.Items.Clear();
+        foreach (var sound in available)
+            if (!string.IsNullOrEmpty(sound))
+                comboBoxAudioAlert.Items.Add(sound);
+        // Ensure selectedAudioAlert is set to config value if available
+        if (config != null && !string.IsNullOrEmpty(config.AudioAlertFile))
+            selectedAudioAlert = config.AudioAlertFile;
+        // Set ComboBox selection
+        if (available.Contains(selectedAudioAlert))
+            comboBoxAudioAlert.SelectedItem = selectedAudioAlert;
+        else if (available.Count > 0)
+            comboBoxAudioAlert.SelectedIndex = 0;
+        comboBoxAudioAlert.SelectedIndexChanged -= ComboBoxAudioAlert_SelectedIndexChanged;
+        comboBoxAudioAlert.SelectedIndexChanged += ComboBoxAudioAlert_SelectedIndexChanged;
+    }
+
+    private void ComboBoxAudioAlert_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        if (comboBoxAudioAlert.SelectedItem is string selected)
+        {
+            selectedAudioAlert = selected;
+            SaveConfig();
+            // Log selected audio file
+            Log($"Selected audio alert: {selectedAudioAlert}");
+            // Play the selected sound immediately
+            try
+            {
+                string mediaDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Media");
+                string selectedPath = Path.Combine(mediaDir, selectedAudioAlert);
+                if (File.Exists(selectedPath))
+                {
+                    using var player = new SoundPlayer(selectedPath);
+                    player.Play();
+                }
+                else
+                {
+                    SystemSounds.Exclamation.Play();
+                }
+            }
+            catch { /* Optionally log or ignore errors */ }
+        }
+    }
+
     private void LoadConfig()
     {
-        // Copy config/appsettings.json to output directory if not present
         var sourceConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "config", "appsettings.json");
         var destConfigDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config");
         var destConfigPath = Path.Combine(destConfigDir, "appsettings.json");
         if (!Directory.Exists(destConfigDir))
             Directory.CreateDirectory(destConfigDir);
+        // Only copy the default config if the destination does not exist
         if (!File.Exists(destConfigPath) && File.Exists(sourceConfigPath))
+        {
             File.Copy(sourceConfigPath, destConfigPath, true);
-
+            Log($"Copied default settings file from '{sourceConfigPath}' to '{destConfigPath}'");
+        }
         var configPath = destConfigPath;
         if (File.Exists(configPath))
         {
             var json = File.ReadAllText(configPath);
+            Log($"Read settings file at '{configPath}'");
             config = JsonConvert.DeserializeObject<AppConfig>(json);
+            if (config != null)
+            {
+                // Log each setting value
+                if (config.BusinessHours != null)
+                {
+                    Log($"BusinessHours.Enabled = {config.BusinessHours.Enabled}");
+                    Log($"BusinessHours.DaysOfWeek = [{string.Join(", ", config.BusinessHours.DaysOfWeek ?? new List<string>())}]");
+                    Log($"BusinessHours.StartTime = {config.BusinessHours.StartTime}");
+                    Log($"BusinessHours.EndTime = {config.BusinessHours.EndTime}");
+                }
+                if (config.Teamwork != null)
+                {
+                    Log($"Teamwork.ApiToken = {config.Teamwork.ApiToken}");
+                    Log($"Teamwork.BaseUrl = {config.Teamwork.BaseUrl}");
+                }
+                Log($"AudioAlertFile = {config.AudioAlertFile}");
+            }
+            if (config != null && !string.IsNullOrEmpty(config.AudioAlertFile))
+            {
+                selectedAudioAlert = config.AudioAlertFile;
+                Log($"Loaded audio alert from settings: {selectedAudioAlert}");
+            }
         }
+    }
+
+    private void SaveConfig()
+    {
+        if (config == null)
+            config = new AppConfig();
+        string oldAudioAlert = config.AudioAlertFile ?? "(none)";
+        config.AudioAlertFile = selectedAudioAlert;
+        var destConfigDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config");
+        var destConfigPath = Path.Combine(destConfigDir, "appsettings.json");
+        var json = JsonConvert.SerializeObject(config, Formatting.Indented);
+        File.WriteAllText(destConfigPath, json);
+        if (oldAudioAlert != selectedAudioAlert)
+        {
+            Log($"Updated settings file at '{destConfigPath}': AudioAlertFile changed from '{oldAudioAlert}' to '{selectedAudioAlert}'");
+        }
+        else
+        {
+            Log($"Settings file at '{destConfigPath}' updated (no change to AudioAlertFile)");
+        }
+    }
+
+    private void Log(string message)
+    {
+        try
+        {
+            File.AppendAllText(logFilePath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
+        }
+        catch { /* Optionally handle logging errors */ }
     }
 
     // Returns true if the current time is within configured business hours
@@ -225,7 +336,27 @@ public partial class Form1 : Form
         }
         else
         {
+            Log("Application stopped");
             base.OnFormClosing(e);
+        }
+    }
+
+    private void tabControlSettings_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        // If the Log tab is selected, load the log file contents
+        if (tabControlSettings.SelectedTab == tabPageLog)
+        {
+            try
+            {
+                if (File.Exists(logFilePath))
+                    textBoxLog.Text = File.ReadAllText(logFilePath);
+                else
+                    textBoxLog.Text = "(Log file not found)";
+            }
+            catch (Exception ex)
+            {
+                textBoxLog.Text = $"Error reading log file: {ex.Message}";
+            }
         }
     }
 }
