@@ -83,6 +83,17 @@ The tray icon state is managed automatically by the application logic. There is 
 
 The application uses the Windows system tray (via `NotifyIcon`) to display status and provide quick access to controls. Icons are loaded at startup and the tray icon is always visible while the app is running.
 
+### Tray Icon Context Menu
+- Right-clicking the tray icon opens a context menu with:
+  - **Settings**: Opens the main window (form) for configuration. The form is hidden by default and only shown when this menu item is selected.
+  - **Exit**: Fully exits the application.
+
+### Form Behavior
+- The main window is hidden by default and does not appear in the Windows taskbar.
+- The form cannot be minimized or maximized; only closed.
+- Closing the form (via the window close button) does not exit the application, but simply hides the window. The app continues running in the tray.
+- To fully exit, use the **Exit** option in the tray icon context menu.
+
 ## Business Hours Configuration
 
 IDLE Snitch supports configurable business hours. To set business hours:

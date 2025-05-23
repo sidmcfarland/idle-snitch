@@ -39,6 +39,12 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [ ] Implement snooze functionality (10, 30, 60 minutes)
 - [ ] Reflect snoozed state in tray icon
 - [ ] Provide settings UI (API token, business hours, audio file, enable/disable)
+    - [x] Add Settings item to tray icon context menu
+    - [x] Show main window only when Settings is selected from tray menu
+    - [x] Main window is hidden by default and never appears in the taskbar
+    - [x] Main window cannot be minimized or maximized; only closed
+    - [x] Closing the main window hides it (does not exit the app)
+    - [x] Only the Exit menu item in the tray menu fully exits the application
 - [ ] Manual enable/disable toggle via tray menu
 - [ ] Register app to auto-start on Windows login
 - [ ] Review core features: assess if additional features, tests, or refactoring are needed before moving to non-functional tasks

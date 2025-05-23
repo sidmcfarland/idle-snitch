@@ -47,10 +47,16 @@ public partial class Form1 : Form
     public Form1()
     {
         InitializeComponent();
+        this.MaximizeBox = false;
+        this.MinimizeBox = false;
+        this.FormBorderStyle = FormBorderStyle.FixedDialog;
         LoadConfig();
         // Tray icon and icons are initialized in InitializeComponent
         currentTrayIconState = TrayIconState.ActiveOn;
         InitializePolling();
+        this.WindowState = FormWindowState.Minimized;
+        this.ShowInTaskbar = false;
+        this.Hide();
     }
 
     private void InitializePolling()
@@ -192,6 +198,34 @@ public partial class Form1 : Form
             trayIcon.Icon = trayIcons[key];
             trayIcon.Visible = true;
             this.Icon = trayIcons[key]; // Update the form's icon as well
+        }
+    }
+
+    // Event handler for Settings menu item
+    private void settingsMenuItem_Click(object? sender, EventArgs e)
+    {
+        this.Show();
+        this.WindowState = FormWindowState.Normal;
+        this.ShowInTaskbar = false;
+        this.BringToFront();
+    }
+
+    // Event handler for Exit menu item
+    private void exitMenuItem_Click(object? sender, EventArgs e)
+    {
+        Application.Exit();
+    }
+
+    protected override void OnFormClosing(FormClosingEventArgs e)
+    {
+        if (e.CloseReason != CloseReason.ApplicationExitCall)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
+        else
+        {
+            base.OnFormClosing(e);
         }
     }
 }
