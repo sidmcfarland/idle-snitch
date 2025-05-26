@@ -52,6 +52,11 @@ public partial class Form1 : Form
     private string tempSelectedAudioAlert = "";
     private static readonly string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IdleSnitch.log");
 
+    // Snooze state
+    private bool isSnoozed = false;
+    private DateTime? snoozeEndTime = null;
+    private System.Windows.Forms.Timer snoozeTimer = new System.Windows.Forms.Timer();
+
     public Form1()
     {
         InitializeComponent();
@@ -90,6 +95,11 @@ public partial class Form1 : Form
     {
         try
         {
+            if (isSnoozed)
+            {
+                SetTrayIconState(TrayIconState.Snoozed);
+                return;
+            }
             if (!IsWithinBusinessHours())
             {
                 SetTrayIconState(TrayIconState.Outside);
@@ -134,6 +144,7 @@ public partial class Form1 : Form
 
     private void PlayNudgeAlert()
     {
+        if (isSnoozed) return;
         try
         {
             string mediaDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Media");
@@ -447,5 +458,48 @@ public partial class Form1 : Form
             comboBoxAudioAlert.SelectedItem = tempSelectedAudioAlert;
         LoadSettingsToUI();
         this.Hide();
+    }
+
+    // Snooze menu handlers
+    private void snooze5MinMenuItem_Click(object sender, EventArgs e) => StartSnooze(TimeSpan.FromMinutes(5));
+    private void snooze15MinMenuItem_Click(object sender, EventArgs e) => StartSnooze(TimeSpan.FromMinutes(15));
+    private void snooze1HourMenuItem_Click(object sender, EventArgs e) => StartSnooze(TimeSpan.FromHours(1));
+    private void snooze4HourMenuItem_Click(object sender, EventArgs e) => StartSnooze(TimeSpan.FromHours(4));
+    private void snooze12HourMenuItem_Click(object sender, EventArgs e) => StartSnooze(TimeSpan.FromHours(12));
+    private void snooze1DayMenuItem_Click(object sender, EventArgs e) => StartSnooze(TimeSpan.FromDays(1));
+    private void snooze1WeekMenuItem_Click(object sender, EventArgs e) => StartSnooze(TimeSpan.FromDays(7));
+    private void snooze1MonthMenuItem_Click(object sender, EventArgs e) => StartSnooze(TimeSpan.FromDays(30));
+    private void cancelSnoozeMenuItem_Click(object sender, EventArgs e) => EndSnooze();
+
+    private void StartSnooze(TimeSpan duration)
+    {
+        isSnoozed = true;
+        snoozeEndTime = DateTime.Now.Add(duration);
+        snoozeMenuItem.Visible = false;
+        cancelSnoozeMenuItem.Visible = true;
+        SetTrayIconState(TrayIconState.Snoozed);
+        snoozeTimer.Interval = 1000 * 30; // check every 30 seconds
+        snoozeTimer.Tick -= SnoozeTimer_Tick;
+        snoozeTimer.Tick += SnoozeTimer_Tick;
+        snoozeTimer.Start();
+    }
+
+    private void EndSnooze()
+    {
+        isSnoozed = false;
+        snoozeEndTime = null;
+        snoozeMenuItem.Visible = true;
+        cancelSnoozeMenuItem.Visible = false;
+        snoozeTimer.Stop();
+        // Restore tray icon state (force poll or set based on timer status)
+        _ = PollTimerStatusAsync();
+    }
+
+    private void SnoozeTimer_Tick(object? sender, EventArgs e)
+    {
+        if (snoozeEndTime.HasValue && DateTime.Now >= snoozeEndTime.Value)
+        {
+            EndSnooze();
+        }
     }
 }

@@ -10,6 +10,11 @@ IDLE Snitch is a Windows application built with .NET 8 and WinForms. The project
 - Teamwork API integration for timer status
 - Audio alert if not on the clock during business hours (user-selectable from all Windows system sounds)
 - **Configurable alert interval (seconds) for how often the app checks and alerts**
+- **Snooze functionality:**
+  - Right-click the tray icon to access a "Snooze" menu with durations: 5 min, 15 min, 1 hr, 4 hr, 12 hr, 1 day, 1 week, 1 month
+  - While snoozed, alerts are suppressed and the tray icon shows the snoozed state
+  - The "Snooze" menu is replaced by a "Cancel Snooze" menu item while snoozed
+  - Normal operation resumes when snooze ends or is canceled
 - Settings UI with tabbed interface
   - General tab: select audio notification, configure business hours, API token, alert interval, etc.
   - Log tab: view application log file
@@ -61,8 +66,8 @@ You can run IDLE Snitch on any Windows PC without installing Visual Studio, VS C
 2. Extract the zip file anywhere.
 3. Double-click `IdleSnitch.exe` to run the app.
 4. The app will appear in your system tray.
-
-No installation or additional software required!
+5. Right-click the tray icon to access the Snooze/Cancel Snooze menu and other options.
+6. Alerts will be suppressed while snoozed and resume automatically when snooze ends or is canceled.
 
 ## Planned Features & Development Progress
 See `development-tasks.md` for the full list of planned features and development progress.

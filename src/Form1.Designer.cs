@@ -35,6 +35,16 @@ partial class Form1
     private System.Windows.Forms.GroupBox groupBoxTeamwork;
     private System.Windows.Forms.Label labelAlertInterval;
     private System.Windows.Forms.TextBox textBoxAlertInterval;
+    private System.Windows.Forms.ToolStripMenuItem snoozeMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem cancelSnoozeMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem snooze5MinMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem snooze15MinMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem snooze1HourMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem snooze4HourMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem snooze12HourMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem snooze1DayMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem snooze1WeekMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem snooze1MonthMenuItem;
 
     /// <summary>
     ///  Clean up any resources being used.
@@ -86,6 +96,16 @@ partial class Form1
         this.groupBoxTeamwork = new System.Windows.Forms.GroupBox();
         this.labelAlertInterval = new System.Windows.Forms.Label();
         this.textBoxAlertInterval = new System.Windows.Forms.TextBox();
+        this.snoozeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.cancelSnoozeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.snooze5MinMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.snooze15MinMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.snooze1HourMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.snooze4HourMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.snooze12HourMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.snooze1DayMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.snooze1WeekMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+        this.snooze1MonthMenuItem = new System.Windows.Forms.ToolStripMenuItem();
         // Load icons from assets
         trayIcons["active-on"] = new System.Drawing.Icon("assets/icon-active-on.ico");
         trayIcons["active-off"] = System.Drawing.Icon.ExtractAssociatedIcon("assets/icon-active-off.ico"); // PNG fallback
@@ -96,6 +116,8 @@ partial class Form1
         // trayMenu
         // 
         this.trayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.snoozeMenuItem,
+            this.cancelSnoozeMenuItem,
             this.settingsMenuItem,
             this.exitMenuItem});
         // 
@@ -359,6 +381,53 @@ partial class Form1
         // Set minimum size for the form to fit all controls
         this.MinimumSize = new System.Drawing.Size(600, 600);
         this.ClientSize = new System.Drawing.Size(700, 700);
+
+        // Configure snooze submenu
+        this.snoozeMenuItem.Name = "snoozeMenuItem";
+        this.snoozeMenuItem.Text = "Snooze";
+        this.snoozeMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.snooze5MinMenuItem,
+            this.snooze15MinMenuItem,
+            this.snooze1HourMenuItem,
+            this.snooze4HourMenuItem,
+            this.snooze12HourMenuItem,
+            this.snooze1DayMenuItem,
+            this.snooze1WeekMenuItem,
+            this.snooze1MonthMenuItem
+        });
+        this.snooze5MinMenuItem.Name = "snooze5MinMenuItem";
+        this.snooze5MinMenuItem.Text = "5 Minutes";
+        this.snooze15MinMenuItem.Name = "snooze15MinMenuItem";
+        this.snooze15MinMenuItem.Text = "15 Minutes";
+        this.snooze1HourMenuItem.Name = "snooze1HourMenuItem";
+        this.snooze1HourMenuItem.Text = "1 Hour";
+        this.snooze4HourMenuItem.Name = "snooze4HourMenuItem";
+        this.snooze4HourMenuItem.Text = "4 Hours";
+        this.snooze12HourMenuItem.Name = "snooze12HourMenuItem";
+        this.snooze12HourMenuItem.Text = "12 Hours";
+        this.snooze1DayMenuItem.Name = "snooze1DayMenuItem";
+        this.snooze1DayMenuItem.Text = "1 Day";
+        this.snooze1WeekMenuItem.Name = "snooze1WeekMenuItem";
+        this.snooze1WeekMenuItem.Text = "1 Week";
+        this.snooze1MonthMenuItem.Name = "snooze1MonthMenuItem";
+        this.snooze1MonthMenuItem.Text = "1 Month";
+        this.cancelSnoozeMenuItem.Name = "cancelSnoozeMenuItem";
+        this.cancelSnoozeMenuItem.Text = "Cancel Snooze";
+
+        // Attach event handlers for snooze durations and cancel
+        this.snooze5MinMenuItem.Click += new System.EventHandler(snooze5MinMenuItem_Click);
+        this.snooze15MinMenuItem.Click += new System.EventHandler(snooze15MinMenuItem_Click);
+        this.snooze1HourMenuItem.Click += new System.EventHandler(snooze1HourMenuItem_Click);
+        this.snooze4HourMenuItem.Click += new System.EventHandler(snooze4HourMenuItem_Click);
+        this.snooze12HourMenuItem.Click += new System.EventHandler(snooze12HourMenuItem_Click);
+        this.snooze1DayMenuItem.Click += new System.EventHandler(snooze1DayMenuItem_Click);
+        this.snooze1WeekMenuItem.Click += new System.EventHandler(snooze1WeekMenuItem_Click);
+        this.snooze1MonthMenuItem.Click += new System.EventHandler(snooze1MonthMenuItem_Click);
+        this.cancelSnoozeMenuItem.Click += new System.EventHandler(cancelSnoozeMenuItem_Click);
+
+        // Set initial visibility
+        this.snoozeMenuItem.Visible = true;
+        this.cancelSnoozeMenuItem.Visible = false;
     }
 
     #endregion

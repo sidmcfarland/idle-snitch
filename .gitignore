@@ -30,7 +30,6 @@ artifacts/
 
 # Ignore publish output
 publish/
-IdleSnitch-portable.zip
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt

@@ -41,6 +41,10 @@ This document tracks all development tasks required to deliver the MVP as descri
 - [x] Provide settings UI (API token, business hours, audio file, enable/disable)
     - [x] Add Settings item to tray icon context menu
     - [x] Show main window only when Settings is selected from tray menu
+    - [x] Add **Snooze menu with durations (5 min, 15 min, 1 hr, 4 hr, 12 hr, 1 day, 1 week, 1 month) to tray menu**
+    - [x] Suppress alerts while snoozed; show "Cancel Snooze" menu item during snooze
+    - [x] Swap Snooze/Cancel Snooze menu items based on snooze state
+    - [x] Resume normal operation when snooze ends or is canceled
     - [x] Main window is hidden by default and never appears in the taskbar
     - [x] Main window cannot be minimized or maximized; only closed (later restored to allow resizing)
     - [x] Closing the main window hides it (does not exit the app)
